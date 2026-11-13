@@ -22,16 +22,10 @@ void initList(LList *L) {
 int emptyList(LList L) {
     return (L.spt == 0);
 }
-Node *makeNode(Data x) {
+void insert_Head(LList *L, Data x) {
     Node *pp = (Node *)malloc(sizeof(Node));
-    if (pp == NULL) return NULL;
     pp->infor = x;
     pp->link = NULL;
-    return pp;
-}
-int insert_Head(LList *L, Data x) {
-    Node *pp = makeNode(x);
-    if (pp == NULL) return 0;
     if (emptyList(*L)) {
         L->pHead = pp;
         L->pTail = pp;
@@ -40,10 +34,11 @@ int insert_Head(LList *L, Data x) {
         L->pHead = pp;
     }
     L->spt++;
-    return 1;
 }
 int insert_Tail(LList *L, Data x) {
-    Node *pp = makeNode(x);
+    Node *pp =  (Node *)malloc(sizeof(Node));
+    pp->infor = x;
+    pp->link = NULL;
     if (pp == NULL) return 0;
     if (emptyList(*L)) {
         L->pHead = pp;
@@ -62,7 +57,9 @@ Node *findNode(LList L, int masv) {
     return pp;
 }
 int insert_After(LList *L, Node *p, Data x) {
-    Node *pp = makeNode(x);
+    Node *pp =  (Node *)malloc(sizeof(Node));
+    pp->infor = x;
+    pp->link = NULL;
     if (pp == NULL) return 0;
     pp->link = p->link;
     p->link = pp;
@@ -109,6 +106,54 @@ void processList(LList L) {
         pp = pp->link;
     }
 }
+void ghep(LList L1, LList L2, LList *L){
+	initList(L);
+	Node *p1 = L1.pHead;
+	Node *p2 = L2.pHead;
+	if(L1.spt < L2.spt){
+		while (p1!=NULL){
+			insert_Head(L, p1->infor);
+			insert_Head(L, p2->infor);
+			p1 = p1->link;
+			p2=p2->link;
+		}
+		while(p2!=NULL){
+		insert_Head(L, p2->infor);
+		p2 = p2->link;
+		}
+	}
+	else{
+		while(p2!=NULL){
+			insert_Head(L, p2->infor);
+			insert_Head(L, p1->infor);
+			p2 = p2->link;
+			p1 = p1->link;
+		}
+		while(p1!=NULL){
+			insert_Head(L, p1->infor);
+			p1 = p1->link;
+		}
+	}
+}
+void chentang(LList*L, Data x){
+	Node *p = L->pHead , *q;
+	while(pp!=NULL && pp->infor.masv < x.masv){
+		q= pp;
+		pp=pp->link;
+	}
+	if(pp==L->pHead) insert_Head(L,x);
+	else insert_after(L,q,x);
+}
+void del_Head(LList *L){
+	Node *pp;
+	if(emptyList(*L)), return;
+	else{
+		pp = L->pHead;
+		free(pp);
+		L->spt-;
+		if(L->pHead==NULL) L->pTail=NULL;
+	}
+}
 int main() {
     LList L;
     int kt = 0;
@@ -119,6 +164,7 @@ int main() {
         printf("\n1: Them nut vao dau danh sach");
         printf("\n2: Them nut vao cuoi danh sach");
         printf("\n3: Them nut vao sau mot nut khac trong danh sach");
+        printf("\n4: ghep nhieu danh sach thanh 1 danh sach");
         printf("\n9: Duyet ds");
         printf("\n0: Thoat");
         printf("\nMoi ban chon: ");
@@ -128,16 +174,14 @@ int main() {
             case 1:
                 nhap(&x);
                 if (x.masv > 0) {
-                    if (!insert_Head(&L, x))
-                        printf("Khong du bo nho!\n");
+                    insert_Head(&L, x);
                 }
                 break;
 
             case 2:
                 nhap(&x);
                 if (x.masv > 0) {
-                    if (!insert_Tail(&L, x))
-                        printf("Khong du bo nho!\n");
+                    insert_Tail(&L, x);
                 }
                 break;
             case 3: {
@@ -157,6 +201,8 @@ int main() {
                 }
                 break;
             }
+            case 4:
+            	
             case 9:
                 processList(L);
                 break;
